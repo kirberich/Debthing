@@ -1,0 +1,25 @@
+{% extends "main.html" %}
+
+{% block title %}{{expense.description}}{% endblock %}
+{% block subtitle %}{{expense.created_by}} - {{expense.created_at}}{% endblock %}
+
+{% block expense %}
+	<table>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>
+			<small>Assign selected to<br/></small>
+			<select class="chosen-select" id="bulk-select">
+				{% for friend in user.profile.self_and_friends %}
+				<option>{{friend.user}}</option>
+				{% endfor %}
+			</select>
+		</td>
+	</tr>
+	{% for item in expense.items.all %}
+		{% include "item_form.html" %}
+	{% endfor %}
+	{% include "item_form.html" %}
+{% endblock %}

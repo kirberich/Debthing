@@ -1,0 +1,20 @@
+<tr class="updatable" data-url="/api/item/{{item.pk}}">
+	<td>
+		{% csrf_token %}
+		<input class="update" type="text" name="description" placeholder="Description" value="{{item.description}}"/>
+		<input type="hidden" name="expense" value="{% if item %}{{item.expense.pk}}{% else %}{{expense.pk}}{% endif %}"/>
+	</td>
+	<td>
+		<input class="update" type="text" name="amount" placeholder="Amount" value="{{item.amount}}"/>
+	</td>
+	<td>
+		<input type="checkbox" name="bulk-assign" value="{{item.pk}}"/>
+	</td>
+	<td>
+		<select class="update chosen-select" name="users" multiple data-placeholder="Select users">
+			{% for friend in user.profile.self_and_friends %}
+			<option value="{{friend.user.pk}}" {% if friend.user in item.users.all %}selected="selected"{% endif %}>{{friend.user}}</option>
+			{% endfor %}
+		</select>
+	</td>
+</tr>

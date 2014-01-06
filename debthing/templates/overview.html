@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load general_tags %}
+
+{% block title %}{{user}} owes... {% if other_user %}{{other_user}}{% endif %}{% endblock %}
+
+{% block main %}
+<table>
+{% for friend in friends %}
+	<tr class="overview-friend{% if balance|is_positive %} positive{% else %} negative{% endif %}"><td class="friend-name">{{friend.user}}</td><td></td><td class="friend-balance amount">{{user|balance:friend.user|currency}}</td></tr>
+	{% with user|balance_per_expense:friend.user as expense_balances %}
+		{% for expense, balance in expense_balances.items %}
+		<tr class="overview-expense{% if balance|is_positive %} positive{% else %} negative{% endif %}">
+			<td></td>
+			<td class="expense-description">
+				<a href="/{{expense.pk}}">{{expense}}</a>
+				<table class="overview-items">
+				{% for item in expense|expense_items:friend.user %}
+					<tr class="overview-item"><td></td><td class="item-description">{{item}}</td><td class="amount">{{item.amount_per_user|currency}}</td><td class="of-total"> (of {{item.amount|currency}})</td></tr>
+				{% endfor %}
+				</table>
+			</td>
+			<td class="amount">{{balance|currency}}</td>
+		</tr>
+		{% endfor %}
+	{% endwith %}
+{% endfor %}
+</table>
+{% endblock %}

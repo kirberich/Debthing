@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block body %}
+	{% if user.is_authenticated %}
+	Can't register, already logged in.
+	{% else %}
+	<form action="/api/user" method="post">
+		{% csrf_token %}
+		<input type="email" name="username" placeholder="E-Mail Address/Username"/>
+		<input type="password" name="password" placeholder="Password" />
+		<input type="submit" value="Register"/>
+	</form>
+	{% endif %}
+{% endblock %}
