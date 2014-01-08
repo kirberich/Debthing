@@ -5,7 +5,6 @@
 
 {% block main %}
 	<form id="expense-form" class="updatable" action="/api/expense/{{expense.pk}}" method="post">
-		{% csrf_token %}
 		<input class="update" type="text" name="description" placeholder="Description" value="{{expense.description}}"/>
 		{% if not expense %}<input type="submit" value="Create"/>{% endif %}
 	</form>

@@ -4,16 +4,16 @@
 {% block subtitle %}{{expense.created_by}} - {{expense.created_at}}{% endblock %}
 
 {% block expense %}
-	<table>
+	<table id="expense-table">
 	<tr>
 		<td></td>
 		<td></td>
-		<td></td>
+		<td><a href="#" id="bulk-select-all-none">All</a></td>
 		<td>
-			<small>Assign selected to<br/></small>
 			<select class="chosen-select" id="bulk-select">
+				<option>Assign selected to...</option>
 				{% for friend in user.profile.self_and_friends %}
-				<option>{{friend.user}}</option>
+				<option value="{{friend.user.pk}}">{{friend.user}}</option>
 				{% endfor %}
 			</select>
 		</td>
@@ -22,4 +22,5 @@
 		{% include "item_form.html" %}
 	{% endfor %}
 	{% include "item_form.html" %}
+	</table>
 {% endblock %}

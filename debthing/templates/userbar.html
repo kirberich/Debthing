@@ -1,0 +1,19 @@
+{% load general_tags %}
+<div class="userbar">
+	<h2>Friends</h2>
+	<div>
+		Pending
+		{{user.profile.friends_pending.all}}
+	</div>
+	<div>
+		<table>
+		{% for friend in user.profile.friends.all %}
+		<tr><td><a href="/overview/{{friend.user_id}}">{{friend.user}}</a></td><td class="amount">{{user|balance:friend|currency}}</td></li>
+		{% endfor %}
+		</table>
+	</div>
+	<form action="/api/add_friend" method="post">
+		<input type="text" name="user" placeholder="Friend's Email"/>
+		<input type="submit" value="Add Friend"/>
+	</form>
+</div>

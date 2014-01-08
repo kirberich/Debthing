@@ -14,6 +14,7 @@ urlpatterns = patterns('',
 
     # Api
     url(r'^api/user/?$', 'core.views.api_user', name='api_user'),
+    url(r'^api/userbar/?$', 'core.views.api_userbar', name='userbar'),
     url(r'^api/add_friend/?$', 'core.views.api_add_friend', name='api_add_friend'),
     url(r'^api/expense/(?P<expense_pk>\d*)/?$', 'core.views.api_expense', name='api_expense'),
     url(r'^api/item/(?P<item_pk>\d*)/?$', 'core.views.api_item', name='api_item'),

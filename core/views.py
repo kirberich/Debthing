@@ -107,32 +107,56 @@ def api_expense(request, expense_pk=None):
     expense.save()
 
     if request.is_ajax():
-        return HttpResponse(json.dumps({'expense_description':expense.description}))
+        return HttpResponse(json.dumps({
+            'type': 'expense',
+            'expense_description': expense.description
+        }))
     return HttpResponseRedirect("/%s" % expense.pk)
 
 @login_required
 @require_POST
 def api_item(request, item_pk=None):
+    created = False
     if item_pk:
         item = Item.objects.get(pk=item_pk)
         if not item.created_by == request.user:
+            import pdb
+            pdb.set_trace()
             return HttpResponse(status=403)
     else:
         item = Item()
         item.created_by = request.user
-    expense = Expense.objects.get(pk=request.POST.get('expense'))
-    if not expense.created_by == request.user:
-        return HttpResponse(status=403)
-    item.expense = expense
+        created = True
 
-    item.description = request.POST.get('description')
-    item.amount = request.POST.get('amount')
-    item.save()
+    if request.POST.get('delete'):
+        item.delete()
+    else:
+        expense = Expense.objects.get(pk=request.POST.get('expense'))
+        if not expense.created_by == request.user:
+            return HttpResponse(status=403)
+        item.expense = expense
 
-    user_pks = request.POST.getlist('users')
-    item.users.clear()
-    for pk in user_pks:
-        user = User.objects.get(pk=pk)
-        item.users.add(user)
+        item.description = request.POST.get('description')
+        item.amount = request.POST.get('amount')
+        item.save()
 
+        user_pks = request.POST.getlist('users')
+        item.users.clear()
+        for pk in user_pks:
+            user = User.objects.get(pk=pk)
+            item.users.add(user)
+
+    if request.is_ajax():
+        return HttpResponse(json.dumps({
+            'type': 'item',
+            'item_pk': item.pk,
+            'item_created': created,
+            'item_form': render_to_response('item_form.html', {'expense':item.expense, 'item':item}, context_instance = RequestContext(request)).content,
+            'empty_form': render_to_response('item_form.html', {'expense':item.expense}, context_instance = RequestContext(request)).content
+        }))
     return HttpResponseRedirect("/%s" % item.expense_id)
+
+@login_required
+def api_userbar(request):
+    user = request.user
+    return render_to_response('userbar.html', {'user': user}, context_instance = RequestContext(request))
